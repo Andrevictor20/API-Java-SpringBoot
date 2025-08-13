@@ -22,7 +22,8 @@ RUN mvn clean package -DskipTests
 # Estágio 2: Criação da Imagem Final de Execução
 # Usamos uma imagem JRE (Java Runtime Environment), que é muito menor
 # que a imagem JDK, pois não contém as ferramentas de desenvolvimento.
-FROM eclipse-temurin:24-jre-jammy
+# CORREÇÃO: Alterada a tag da imagem para uma que está disponível.
+FROM eclipse-temurin:24-jre
 
 # Define o diretório de trabalho.
 WORKDIR /app
