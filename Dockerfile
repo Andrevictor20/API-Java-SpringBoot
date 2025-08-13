@@ -1,6 +1,6 @@
-# Estágio 1: Build da Aplicação com Maven e Java 24
-# Usamos uma imagem que já contém o Maven e o JDK 24.
-FROM maven:3.9.6-eclipse-temurin-24 AS builder
+# Estágio 1: Build da Aplicação com Maven e Java 17
+# A imagem base foi alterada para usar o JDK 17.
+FROM maven:3-eclipse-temurin-17 AS builder
 
 # Define o diretório de trabalho dentro do contêiner.
 WORKDIR /app
@@ -20,10 +20,8 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Estágio 2: Criação da Imagem Final de Execução
-# Usamos uma imagem JRE (Java Runtime Environment), que é muito menor
-# que a imagem JDK, pois não contém as ferramentas de desenvolvimento.
-# CORREÇÃO: Alterada a tag da imagem para uma que está disponível.
-FROM eclipse-temurin:24-jre
+# A imagem JRE também foi alterada para a versão 17.
+FROM eclipse-temurin:17-jre
 
 # Define o diretório de trabalho.
 WORKDIR /app
@@ -33,8 +31,6 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
 # Expõe a porta em que a aplicação Spring Boot será executada.
-# Essa porta deve ser a mesma que sua aplicação usa internamente.
-# No seu docker-compose, você mapeia a porta 5068 do host para a 5068 do contêiner.
 EXPOSE 5068
 
 # Comando para iniciar a aplicação quando o contêiner for executado.
