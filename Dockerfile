@@ -1,26 +1,26 @@
-# Use OpenJDK 24 como base
+# Base OpenJDK 24
 FROM openjdk:24-jdk-slim
 
-# Instale dependências necessárias
+# Dependências
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
-# Define o diretório de trabalho
+# Diretório de trabalho
 WORKDIR /app
 
-# Copia o JAR da aplicação
+# Copia o JAR
 COPY target/api-0.0.1-SNAPSHOT.jar app.jar
 
-# Cria usuário não-root para segurança
+# Usuário não-root
 RUN adduser --disabled-password --gecos '' appuser
 RUN chown appuser:appuser /app/app.jar
 USER appuser
 
-# Expõe a porta
+# Porta exposta
 EXPOSE 5068
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:5068/actuator/health || exit 1
 
-# Comando para executar
+# Rodar aplicação
 ENTRYPOINT ["java", "-Xmx512m", "-jar", "app.jar"]
